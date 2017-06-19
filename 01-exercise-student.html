@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+  <div class="container">
+  <h1>ICG 2D</h1>
+  <canvas id="checkerboard" class="col-md-4"></canvas>
+
+  <script>
+    var canvas = document.getElementById("checkerboard");
+    canvas.height = canvas.width;
+    var ctx = canvas.getContext("2d");
+    var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    var data = imageData.data;
+    for(var x = 0; x < canvas.width; x++) {
+      for(var y = 0; y < canvas.height; y++) {
+        
+        var colour = (Math.floor(x / canvas.width * 8) % 2
+        	^ Math.floor(y / canvas.height * 8) % 2)
+        	* 255;
+		data[4*(canvas.width * y + x) + 0] = colour;
+		data[4*(canvas.width * y + x) + 1] = colour;
+		data[4*(canvas.width * y + x) + 2] = colour;
+		data[4*(canvas.width * y + x) + 3] = 255;
+		}
+    }
+    ctx.putImageData(imageData, 0, 0);
+  </script>
+  <div class="col-md-4">
+    Implementieren Sie mit dem linken Canvas-Element ein Schachbrettmuster und mit dem rechten Element einen Kreis.
+  </div>
+  <canvas id="circle" class="col-md-4"></canvas>
+  <script>
+    var canvas = document.getElementById("circle");
+    canvas.height = canvas.width;
+    var ctx = canvas.getContext("2d");
+    var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    var data = imageData.data;
+    var radius = canvas.width / 3;
+    for(var x = 0; x < canvas.width; x++) {
+      for(var y = 0; y < canvas.height; y++) {
+    	  var dist = [
+              Math.abs(x - canvas.width/2),
+              Math.abs(y - canvas.height/2)
+            ];
+            var length = dist[0] * dist[0] + dist[1] * dist[1];
+            var radius_squared = radius * radius;
+            data[4*(canvas.width * y + x) + 0] = (radius_squared < length)? 255:0;
+            data[4*(canvas.width * y + x) + 1] = (radius_squared < length)? 255:0;
+            data[4*(canvas.width * y + x) + 2] = (radius_squared < length)? 255:0;
+            data[4*(canvas.width * y + x) + 3] = (radius_squared < length)? 0:255;
+      }
+    }
+    ctx.putImageData(imageData, 0, 0);
+  </script>
+  </div>
+</body>
+</html>
