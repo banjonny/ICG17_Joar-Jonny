@@ -26,6 +26,7 @@ class Ray {
         this.xpos = xpos;
         this.ypos = ypos;
         this.camera = camera;
+        return xpos + direction;
     // TODO
   }
 }
