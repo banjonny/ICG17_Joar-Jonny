@@ -7,8 +7,17 @@ class Vector {
    * @param  {number} w The w component
    * @return {number}   The resulting vector
    */
-  constructor(x, y, z, w) {
-    // TODO
+   float x;
+   float y;
+   float z;
+
+
+  public vector (x, y, z, w) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.w = w;
+    return this;
   }
 
   /**
@@ -16,7 +25,7 @@ class Vector {
    * @return {number} The x component of the vector
    */
   get x() {
-    // TODO
+    return this.x;
   }
 
   /**
@@ -24,7 +33,7 @@ class Vector {
    * @return {number} The y component of the vector
    */
   get y() {
-    // TODO
+    return this.y;
   }
 
   /**
@@ -32,7 +41,7 @@ class Vector {
    * @return {number} The z component of the vector
    */
   get z() {
-    // TODO
+    return this.z;
   }
 
   /**
@@ -40,15 +49,18 @@ class Vector {
    * @return {number} The w component of the vector
    */
   get w() {
-    // TODO
+    return this.w;
   }
 
   /**
    * Creates a new vector with the scalar/vector added
    * @param {(number|Vector)} other The scalar/vector to add
    */
-  add(other) {
-    // TODO
+  add(other, scalar) {
+    this.x = x * scalar + other.x;
+    this.y = y * scalar + other.y;
+    this.z = z * scalar + other.z;
+    return this;
   }
 
   /**
@@ -56,7 +68,7 @@ class Vector {
    * @param {(number|Vector)} other The scalar/vector to subtract
    */
   sub(other) {
-    // TODO
+    return new vector(this.x - other.x, this.y - other.y, this.z - other.z);
   }
 
   /**
@@ -64,7 +76,7 @@ class Vector {
    * @param {(number|Vector)} other The scalar/vector to multiply
    */
   mul(other) {
-    // TODO
+    return new vector(this.x * other, this.y * other, this.z * other);
   }
 
   /**
@@ -72,7 +84,8 @@ class Vector {
    * @param {(number|Vector)} other The scalar/vector to divide
    */
   div(other) {
-    // TODO
+    other = 1f/other;
+            return new vector(this.x * other, this.y * other, this.z * other);
   }
 
   /**
@@ -80,15 +93,16 @@ class Vector {
    * @param {Vector} other The vector to calculate the dot product with
    */
   dot(other) {
-    // TODO
+   return (this.x * other.x + this.y * other.y + this.z * other.z);
   }
+
 
   /**
    * Cross product
    * @param {Vector} other The vector to calculate the cross product with
    */
   cross(other) {
-    // TODO
+    return cross(other, null);
   }
 
   /**
@@ -96,7 +110,14 @@ class Vector {
    * @return {Array} An array representation.
    */
   valueOf() {
-    // TODO
+    float[] floats;
+    if (floats == null) {
+                floats = new float[3];
+            }
+            floats[0] = this.x;
+            floats[1] = this.y;
+            floats[2] = this.z;
+            return floats;
   }
 
   /**
@@ -104,7 +125,18 @@ class Vector {
    * @return {Vector} A vector with length 1
    */
   normalised() {
-    // TODO
+    float length = length();
+    //        if (length != 0) {
+    //            return divide(length);
+    //        }
+    //
+    //        return divide(1);
+            float length = this.x * this.x + this.y * this.y + this.z * this.z;
+            if (length != 1f && length != 0f){
+                length = 1.0f / FastMath.sqrt(length);
+                return new vector(this.x * length,this.y * length, this.z * length);
+            }
+            return clone();
   }
 
   /**
@@ -113,7 +145,15 @@ class Vector {
    * @return {Boolean}       True if the vectors carry equal numbers. The fourth element may be both equivalent to undefined to still return true.
    */
   equals(other) {
-    // TODO
+    if (!(other instanceof vector)) { return false; }
+
+            if (this == other) { return true; }
+
+            vector comp = (vector) other;
+            if (Float.compare(this.x,comp.x) != 0) return false;
+            if (Float.compare(this.y,comp.y) != 0) return false;
+            if (Float.compare(this.z,comp.z) != 0) return false;
+            return true;
   }
 
   /**
@@ -121,6 +161,10 @@ class Vector {
    * @return {number} Length of the vector
    */
   get length() {
-    // TODO
+    return FastMath.sqrt(lengthSquared());
+  }
+
+  public float lengthSquared() {
+    return this.x * this.x + this.y * this.y + this.z * this.z;
   }
 }
