@@ -15,7 +15,7 @@ class Ray {
    The plane is located at (0, 0, -1) with x ∈ [-1,1] and y ∈ [-1, 1]
    * @param  {number} width  Width of the canvas
    * @param  {number} height Height of the canvas
-   * @param  {number} xpos   x-position of pixel in canvas
+   * @param  {number} xpos  x-position of pixel in canvas
    * @param  {number} ypos   y-position of pixel in canvas
    * @param  {Vector} camera Camera-position
    * @return {Ray}        The resulting Ray
