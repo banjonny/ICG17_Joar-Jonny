@@ -21,7 +21,7 @@ class Sphere {
    */
   intersect(ray) {
     vector tmp;
-        double A,B,C,d,t1,t2,t;
+    double A,B,C,d,t1,t2,t;
 
         tmp = Vector.subtract(ray.Origin, Centre);
         A = ray.Direction.squarednorm();
