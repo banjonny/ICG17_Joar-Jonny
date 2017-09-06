@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    </head>
-    <body>
-        <div class="container">
-            <h1>ICG 2D</h1>
-            <canvas id="checkerboard" class="col-md-4"></canvas>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <h1>ICG 2D</h1>
+    <canvas id="checkerboard" class="col-md-4"></canvas>
 
-            <script>
+    <script>
                 var canvas = document.getElementById("checkerboard");
                 canvas.height = canvas.width;
                 var ctx = canvas.getContext("2d");
@@ -30,11 +30,11 @@
                 }
                 ctx.putImageData(imageData, 0, 0);
             </script>
-            <div class="col-md-4">
-                Implementieren Sie mit dem linken Canvas-Element ein Schachbrettmuster und mit dem rechten Element einen Kreis.
-            </div>
-            <canvas id="circle" class="col-md-4"></canvas>
-            <script>
+    <div class="col-md-4">
+        Implementieren Sie mit dem linken Canvas-Element ein Schachbrettmuster und mit dem rechten Element einen Kreis.
+    </div>
+    <canvas id="circle" class="col-md-4"></canvas>
+    <script>
                 var canvas = document.getElementById("circle");
                 canvas.height = canvas.width;
                 var ctx = canvas.getContext("2d");
@@ -59,6 +59,6 @@
                 }
                 ctx.putImageData(imageData, 0, 0);
             </script>
-        </div>
-    </body>
+</div>
+</body>
 </html>
