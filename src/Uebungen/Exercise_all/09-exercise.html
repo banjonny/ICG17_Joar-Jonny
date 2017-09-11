@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+<script id="vs" type="x-shader/x-vertex">
+			attribute vec3 a_position;
+
+      // TODO
+
+      uniform mat4 M;
+      uniform mat4 V;
+      uniform mat4 P;
+			void main() {
+				gl_Position = P * V * M * vec4( a_position, 1.0 );
+        // TODO
+			}
+		</script>
+
+<script id="fs" type="x-shader/x-fragment">
+      precision mediump float;
+      // TODO
+
+			void main( void ) {
+				gl_FragColor = vec4( 0.0, 0.0, 0.5, 1.0 );
+        // TODO
+			}
+
+		</script>
+<div class="container">
+    <h1>ICG Raytracer</h1>
+    <canvas id="rasteriser" class="col-md-6"></canvas>
+    <div class="col-md-6">
+        Implementieren Sie einen Rasterisierer mit WebGL und einem Szenegraphen.
+        <p id="mousePositionNormalised"></p>
+    </div>
+    <script src="vector.js"></script>
+    <script src="matrix.js"></script>
+    <script src="nodes.js"></script>
+    <script src="visitors.js"></script>
+    <script src="shader.js"></script>
+    <script>
+        var canvas = document.getElementById("rasteriser");
+        canvas.height = canvas.width;
+        var gl = canvas.getContext("webgl");
+        gl.clearColor(1.0, 1.0, 1.0, 1.0);  // Clear to white, fully opaque
+        gl.clearDepth(1.0);                 // Clear everything
+        gl.enable(gl.DEPTH_TEST);           // Enable depth testing
+        gl.depthFunc(gl.LEQUAL);
+
+        // construct scene graph
+        var sg = new GroupNode(Matrix.scaling(new Vector(0.2, 0.2, 0.2)));
+        var gn1 = new GroupNode(Matrix.translation(new Vector(1, 1, 0)));
+        sg.add(gn1);
+        const sphere1 = new SphereNode(new Vector(.5, -.2, 0, 1), 0.4, new Vector(.3, 0, 0, 1))
+        gn1.add(sphere1);
+        let gn2 = new GroupNode(Matrix.translation(new Vector(-.7, -0.4, .1)));
+        sg.add(gn2);
+        const sphere2 = new SphereNode(new Vector(-.5, -.2, .5, 1), 0.4, new Vector(0, 0, .3, 1));
+        gn2.add(sphere2);
+
+        var visitor = new RasterVisitor(gl, sg, "vs", "fs");
+        visitor.camera = {
+            eye: new Vector(-.5, .5, -1, 1),
+            center: new Vector(0, 0, 0, 1),
+            up: new Vector(0, 1, 0, 0),
+            fovy: 60,
+            aspect: canvas.width / canvas.height,
+            near: 0.1,
+            far: 100
+        }
+        let t = 0;
+        function animate(){
+            visitor.draw(t);
+            t += 0.01
+            window.requestAnimationFrame(animate);
+        }
+        window.requestAnimationFrame(animate);
+    </script>
+</div>
+</body>
+</html>

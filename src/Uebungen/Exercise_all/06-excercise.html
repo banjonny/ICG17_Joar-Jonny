@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <h1>ICG Raytracer</h1>
+    <canvas id="raytracer" class="col-md-6"></canvas>
+    <div class="col-md-6">
+        Implementieren Sie die Matrix Klasse. Die Slider können benutzt werden um den Mittelpunkt der Kugeln zu transformieren.
+        <p id="mousePositionNormalised"></p>
+        <div class="form-group">
+            <input type="checkbox" id="userotation"></input>
+            <label for="rotation">Rotation</label>
+            <input type="range" min="0" max="100" id="rotation" disabled></input>
+        </div>
+        <div class="form-group">
+            <input type="checkbox" id="usetranslation"></input>
+            <label for="translation">Translation X</label>
+            <input type="range" min="0" max="100" id="translation" disabled></input>
+        </div>
+        <div class="form-group">
+            <input type="checkbox" id="usescale"></input>
+            <label for="scale">Scale</label>
+            <input type="range" min="0" max="100" id="scale" disabled></input>
+        </div>
+
+    </div>
+    <script src="vector.js"></script>
+    <script src="sphere.js"></script>
+    <script src="matrix.js"></script>
+    <script src="ray.js"></script>
+    <script src="intersection.js"></script>
+    <script>
+        var canvas = document.getElementById("raytracer");
+        canvas.height = canvas.width;
+        var ctx = canvas.getContext("2d");
+        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        var data = imageData.data;
+        var objects = [
+            new Sphere(new Vector(.5, -.2, 0, 1), 0.4, new Vector(.3, 0, 0, 1)),
+            new Sphere(new Vector(-.5, -.2, .5, 1), 0.4, new Vector(0, 0, .3, 1))
+        ];
+        var lightPositions = [
+            new Vector(1, 1, -1, 1)
+        ];
+        var shininess = 10;
+        var cameraPosition = new Vector(0, 0, -2, 1);
+        var testRay = Ray.makeRay(100, 100, 70, 50, cameraPosition);
+        var mousePos = new Vector(0, 0, 0, 1);
+
+        function setPixel(x, y, color) {
+            data[4*(canvas.width * y + x) + 0] = color.r*255;
+            data[4*(canvas.width * y + x) + 1] = color.g*255;
+            data[4*(canvas.width * y + x) + 2] = color.b*255;
+            data[4*(canvas.width * y + x) + 3] = color.a*255;
+        }
+
+        var rotation = Matrix.identity();
+        var translation = Matrix.identity();
+        var scale = Matrix.identity();
+
+        var t = 0;
+        function animate(){
+            data.fill(0);
+            let manipulatedObjects = [];
+            for(let obj of objects) {
+                let position = obj.center;
+                manipulatedObjects.push(
+                    new Sphere(
+                        rotation.mul(scale).mul(translation).mul(obj.center),
+                        obj.radius, obj.color
+                    )
+                );
+            }
+            for(var x = 0; x < canvas.width; x++) {
+                for(var y = 0; y < canvas.height; y++) {
+                    var ray = Ray.makeRay(canvas.width, canvas.height, x, y, cameraPosition);
+                    var minIntersection = new Intersection();
+                    var minObj = null;
+                    for(var shape of manipulatedObjects) {
+                        var intersection = shape.intersect(ray);
+                        if(intersection && intersection.closerThan(minIntersection)) {
+                            minIntersection = intersection;
+                            minObj = shape;
+                        }
+                    }
+                    if(minObj){
+                        if(!minObj.color) {
+                            setPixel(x, y, new Vector(0, 0, 0, 1));
+                        } else {
+                            var color = minObj.color;
+                            // TODO
+                            setPixel(x, y, color);
+                        }
+
+                    }
+                }
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+        }
+        window.requestAnimationFrame(animate);
+
+        document.getElementById("userotation").onchange = function() {
+            let range = document.getElementById("rotation");
+            if(this.checked) {
+                range.onchange = function() {
+                    rotation = Matrix.rotation(new Vector(0, 0, 1, 0), this.value/100*2*Math.PI);
+                    window.requestAnimationFrame(animate);
+                }
+                range.disabled = false;
+                range.onchange();
+            } else {
+                range.disabled = true;
+                rotation = Matrix.identity();
+            }
+            window.requestAnimationFrame(animate);
+        }
+
+        document.getElementById("usetranslation").onchange = function() {
+            let range = document.getElementById("translation");
+            if(this.checked) {
+                range.onchange = function() {
+                    translation = Matrix.translation(new Vector(this.value/100*2-1, 0, 0, 0));
+                    window.requestAnimationFrame(animate);
+                }
+                range.disabled = false;
+                range.onchange();
+            } else {
+                range.disabled = true;
+                translation = Matrix.identity();
+            }
+            window.requestAnimationFrame(animate);
+        }
+
+        document.getElementById("usescale").onchange = function() {
+            let range = document.getElementById("scale");
+            if(this.checked) {
+                range.onchange = function() {
+                    let amount = this.value/100;
+                    scale = Matrix.scaling(new Vector(amount, amount, amount, 0));
+                    window.requestAnimationFrame(animate);
+                }
+                range.disabled = false;
+                range.onchange();
+            } else {
+                range.disabled = true;
+                translation = Matrix.identity();
+            }
+            window.requestAnimationFrame(animate);
+        }
+    </script>
+</div>
+</body>
+</html>

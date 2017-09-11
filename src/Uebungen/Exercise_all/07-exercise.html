@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <h1>ICG Raytracer</h1>
+    <canvas id="raytracer" class="col-md-6"></canvas>
+    <div class="col-md-6">
+        Implementieren Sie einen Raytracer mit einem Szenegraphen.
+        <p id="mousePositionNormalised"></p>
+    </div>
+    <script src="vector.js"></script>
+    <script src="matrix.js"></script>
+    <script src="nodes.js"></script>
+    <script src="visitors.js"></script>
+    <script src="ray.js"></script>
+    <script src="intersection.js"></script>
+    <script>
+        var canvas = document.getElementById("raytracer");
+        canvas.height = canvas.width;
+        var ctx = canvas.getContext("2d");
+        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        var data = imageData.data;
+        var sg = new GroupNode(Matrix.identity());
+        var gn = new GroupNode(Matrix.identity());
+        sg.add(gn);
+        gn.add(new SphereNode(new Vector(.5, -.2, 0, 1), 0.4, new Vector(.3, 0, 0, 1)));
+        gn.add(new SphereNode(new Vector(-.5, -.2, .5, 1), 0.4, new Vector(0, 0, .3, 1)));
+        var lightPositions = [
+            new Vector(1, 1, -1, 1)
+        ];
+        var cameraPosition = new Vector(0, 0, -2, 1);
+
+        function setPixel(x, y, color) {
+            data[4*(canvas.width * y + x) + 0] = color.r*255;
+            data[4*(canvas.width * y + x) + 1] = color.g*255;
+            data[4*(canvas.width * y + x) + 2] = color.b*255;
+            data[4*(canvas.width * y + x) + 3] = color.a*255;
+        }
+
+        var visitor = new RayVisitor(sg);
+
+        var t = 0;
+
+        var startTimer = Date.now();
+        function animate(){
+            var endTimer = Date.now();
+            var elapsed = endTimer - startTimer;
+            if(elapsed < 100) {
+                window.requestAnimationFrame(animate);
+                return;
+            }
+            t += 0.05;
+
+            sg.matrix.setVal(1, 3, Math.sin(Math.PI * t)*0.3);
+            sg.matrix.setVal(2, 3, Math.cos(Math.PI * t)*0.3);
+
+            data.fill(0);
+            for(var x = 0; x < canvas.width; x++) {
+                for(var y = 0; y < canvas.height; y++) {
+                    var ray = Ray.makeRay(canvas.width, canvas.height, x, y, cameraPosition);
+                    var color = visitor.intersect(ray);
+                    if(color) {
+                        setPixel(x, y, color);
+                    }
+                }
+            }
+            ctx.putImageData(imageData, 0, 0);
+            startTimer = Date.now();
+            window.requestAnimationFrame(animate);
+        }
+        window.requestAnimationFrame(animate);
+    </script>
+</div>
+</body>
+</html>
