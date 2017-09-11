@@ -7,10 +7,10 @@ class Vector {
    * @param  {number} w The w component
    * @return {number}   The resulting vector
    */
-   var data = [x, y, z, w] ;
 
 
-  public vector (x, y, z, w) {
+  constructor (x, y, z, w) {
+
   this.data = [x,y,z,w];
 
   }
@@ -63,7 +63,7 @@ class Vector {
    * @param {(number|Vector)} other The scalar/vector to subtract
    */
   sub(other) {
-    return new vector(this.data[0] - other.data[0], this.data[1] - other.data[1], this.data[3] - other.data[3]);
+    return new Vector(this.data[0] - other.data[0], this.data[1] - other.data[1], this.data[2] - other.data[2], this.data[3] - other.data[3]);
   }
 
   /**
@@ -71,7 +71,7 @@ class Vector {
    * @param {(number|Vector)} other The scalar/vector to multiply
    */
   mul(other) {
-    return new vector(this.data[0] * other, this.data[1] * other, this.data[2] * other);
+    return new Vector(this.data[0] * other, this.data[1] * other, this.data[2] * other, this.data[3] * other);
   }
 
   /**
@@ -79,8 +79,8 @@ class Vector {
    * @param {(number|Vector)} other The scalar/vector to divide
    */
   div(other) {
-    other = 1f/other;
-            return new vector(this.data[0] * other, this.data[1] * other, this.data[2] * other);
+    other = 1/other;
+            return new Vector(this.data[0] * other, this.data[1] * other, this.data[2] * other, this.data[3] * other);
   }
 
   /**
@@ -97,7 +97,8 @@ class Vector {
    * @param {Vector} other The vector to calculate the cross product with
    */
   cross(other) {
-    return cross(other, null);
+      Math.cross(other, other)
+
   }
 
   /**
@@ -105,8 +106,8 @@ class Vector {
    * @return {Array} An array representation.
    */
   valueOf() {
-    float[] floats;
-    if (floats == null) {
+    floats = [];
+    if (floats === null) {
                 floats = new float[3];
             }
             floats[0] = this.data[0];
@@ -120,16 +121,16 @@ class Vector {
    * @return {Vector} A vector with length 1
    */
   normalised() {
-    float length = length();
+    var length = length();
     //        if (length != 0) {
     //            return divide(length);
     //        }
     //
     //        return divide(1);
-            float length = this.data[0] * this.data[0] + this.data[1] * this.data[1] + this.data[2] * this.data[2];
-            if (length != 1f && length != 0f){
-                length = 1.0f / FastMath.sqrt(length);
-                return new vector(this.data[0] * length,this.data[1] * length, this.data[2] * length);
+            var length = this.data[0] * this.data[0] + this.data[1] * this.data[1] + this.data[2] * this.data[2];
+            if (length != 1 && length != 0){
+                length = 1.0 / Math.sqrt(length);
+                return new Vector(this.data[0] * length,this.data[1] * length, this.data[2] * length, this.data[3] * length);
             }
             return clone();
   }
@@ -153,10 +154,10 @@ class Vector {
    * @return {number} Length of the vector
    */
   get length() {
-    return FastMath.sqrt(lengthSquared());
+    return Math.sqrt(lengthSquared());
   }
 
-  public float lengthSquared() {
+  public lengthSquared() {
     return this.data[0] * this.data[0] + this.data[1] * this.data[1] + this.data[2] * this.data[2];
   }
 }
