@@ -14,7 +14,6 @@ class Vector {
 
   public vector (x, y, z, w) {
   this.data = [x,y,z,w];
-
   }
 
   /**
@@ -22,7 +21,7 @@ class Vector {
    * @return {number} The x component of the vector
    */
   get x() {
-    return this.x;
+    return this.data[0];
   }
 
   /**
@@ -30,7 +29,7 @@ class Vector {
    * @return {number} The y component of the vector
    */
   get y() {
-    return this.y;
+    return this.data[1];
   }
 
   /**
@@ -38,7 +37,7 @@ class Vector {
    * @return {number} The z component of the vector
    */
   get z() {
-    return this.z;
+    return this.data[2];
   }
 
   /**
@@ -46,7 +45,7 @@ class Vector {
    * @return {number} The w component of the vector
    */
   get w() {
-    return this.w;
+    return this.data[3];
   }
 
   /**

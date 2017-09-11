@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <h1>ICG Raytracer</h1>
+    <canvas id="raytracer" class="col-md-6"></canvas>
+    <div class="col-md-6">
+        Implementieren Sie einen Raytracer der Kugeln und AA Würfel schneiden kann mit Phong Lighting.
+        <p id="mousePositionNormalised"></p>
+        <label for="shininess">Shininess</label>
+        <input id="shininess" type="range" min="1" max="50"></input>
+    </div>
+    <script src="vector.js"></script>
+    <script src="sphere.js"></script>
+    <script src="aabox.js"></script>
+    <script src="ray.js"></script>
+    <script src="intersection.js"></script>
+    <script>
+    var canvas = document.getElementById("raytracer");
+    canvas.height = canvas.width;
+    var ctx = canvas.getContext("2d");
+    var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    var data = imageData.data;
+    var objects = [
+      new Sphere(new Vector(.5, -.2, 0, 1), 0.4, new Vector(.3, 0, 0, 1)),
+      new Sphere(new Vector(-.5, -.2, .5, 1), 0.4, new Vector(0, 0, .3, 1)),
+      new AABox(new Vector(-.5, .4, 0, 1), new Vector(.5, .6, .5, 1), new Vector(0, .3, 0, 1))
+    ];
+    var lightPositions = [
+      new Vector(1, 1, -1, 1)
+    ];
+    var shininess = 10;
+    var cameraPosition = new Vector(0, 0, -2, 1);
+    var testRay = Ray.makeRay(100, 100, 70, 50, cameraPosition);
+    var mousePos = new Vector(0, 0, 0, 1);
+
+    function setPixel(x, y, color) {
+      data[4*(canvas.width * y + x) + 0] = color.r*255;
+      data[4*(canvas.width * y + x) + 1] = color.g*255;
+      data[4*(canvas.width * y + x) + 2] = color.b*255;
+      data[4*(canvas.width * y + x) + 3] = color.a*255;
+    }
+
+    var t = 0;
+    function animate(){
+      data.fill(0);
+      for(var x = 0; x < canvas.width; x++) {
+        for(var y = 0; y < canvas.height; y++) {
+          var ray = Ray.makeRay(canvas.width, canvas.height, x, y, cameraPosition);
+          var minIntersection = new Intersection();
+          var minObj = null;
+          for(var shape of objects) {
+            var intersection = shape.intersect(ray);
+            if(intersection && intersection.closerThan(minIntersection)) {
+              minIntersection = intersection;
+              minObj = shape;
+            }
+          }
+          if(minObj){
+            if(!minObj.color) {
+              setPixel(x, y, new Vector(0, 0, 0, 1));
+            } else {
+              var color = minObj.color;
+              //TODO
+              setPixel(x, y, color);
+            }
+
+          }
+        }
+      }
+
+      ctx.putImageData(imageData, 0, 0);
+    }
+    window.requestAnimationFrame(animate);
+
+    var shininessElement = document.getElementById("shininess");
+    shininessElement.onchange = function(){
+      shininess = shininessElement.value;
+      window.requestAnimationFrame(animate);
+    }
+  </script>
+</div>
+</body>
+</html>
