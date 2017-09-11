@@ -7,7 +7,7 @@ class Vector {
    * @param  {number} w The w component
    * @return {number}   The resulting vector
    */
-   float[] data;
+   var data = [x, y, z, w] ;
 
 
   public vector (x, y, z, w) {
