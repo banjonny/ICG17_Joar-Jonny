@@ -4,9 +4,10 @@ class Sphere {
    * @param  {Vector} center The center of the Sphere
    * @param  {number} radius The radius of the Sphere
    */
-
-  public point center;
-  public double radius;
+constructor(center, point){
+    this.center = center;
+    this.point = point;
+  }
 
   public sphere(center, radius) {
     this.center = center;
