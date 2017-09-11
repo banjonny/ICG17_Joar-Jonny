@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <h1>ICG 2D Lines</h1>
+    <canvas id="dda" class="col-md-4"></canvas>
+
+    <script>
+    var t = 0;
+    var canvasDDA = document.getElementById("dda");
+    canvasDDA.height = canvasDDA.width;
+    var ctxDDA = canvasDDA.getContext("2d");
+
+    var imageDataDDA = ctxDDA.getImageData(0, 0, canvasDDA.width, canvasDDA.height);
+    function updateDDA(t){
+      var pointA = [Math.round((Math.cos(t)+1)/2*canvasDDA.width), Math.round((Math.sin(t)+1)/2*canvasDDA.height)];
+      var pointB = [Math.round((Math.cos(t+Math.PI)+1)/2*canvasDDA.width), Math.round((Math.sin(t+Math.PI)+1)/2*canvasDDA.height)];
+
+      var data = imageDataDDA.data;
+      data.fill(0);
+
+      // TODO
+
+      ctxDDA.putImageData(imageDataDDA, 0, 0);
+    }
+  </script>
+    <div class="col-md-4">
+        <p>Implementieren Sie das Beispiel</p>
+        <canvas id="example"></canvas>
+        <script>
+    var canvasExample = document.getElementById("example");
+    canvasExample.height = canvasExample.width;
+    var ctxExample = canvasExample.getContext("2d");
+    function updateExample(t){
+      ctxExample.clearRect(0, 0, canvasExample.width, canvasExample.height);
+      var pointA = [(Math.cos(t)+1)/2*canvasExample.width, (Math.sin(t)+1)/2*canvasExample.height];
+      var pointB = [(Math.cos(t+Math.PI)+1)/2*canvasExample.width, (Math.sin(t+Math.PI)+1)/2*canvasExample.height];
+      ctxExample.beginPath();
+      ctxExample.moveTo(pointA[0], pointA[1]);
+      ctxExample.lineTo(pointB[0], pointB[1]);
+      ctxExample.stroke();
+    }
+    </script>
+        <p>Links mit dem DDA Algorithmus. Rechts mit dem Bresenham Algorithmus.</p>
+    </div>
+    <canvas id="bresenham" class="col-md-4"></canvas>
+    <script>
+    var canvasBresenham = document.getElementById("bresenham");
+    canvasBresenham.height = canvasBresenham.width;
+    var ctxBresenham = canvasBresenham.getContext("2d");
+
+    var imageDataBresenham = ctxBresenham.getImageData(0, 0, canvasBresenham.width, canvasBresenham.height);
+
+    function updateBresenham(timestamp) {
+      var data = imageDataBresenham.data;
+      data.fill(0);
+
+      var pointA = [Math.round((Math.cos(t)+1)/2*canvasBresenham.width), Math.round((Math.sin(t)+1)/2*canvasBresenham.height)];
+      var pointB = [Math.round((Math.cos(t+Math.PI)+1)/2*canvasBresenham.width), Math.round((Math.sin(t+Math.PI)+1)/2*canvasBresenham.height)];
+
+      // TODO
+
+      ctxBresenham.putImageData(imageDataBresenham, 0, 0);
+    }
+  </script>
+
+    <script>
+  var t = 0;
+  function updateCanvas(timestamp) {
+    t += 0.01;
+    updateExample(t);
+    updateDDA(t);
+    updateBresenham(t);
+    window.requestAnimationFrame(updateCanvas);
+  }
+
+  var timing = false;
+
+  if(timing){
+    var t0 = performance.now();
+    var t = 0;
+    for(var i = 0; i < 1000; i++){
+      t += 0.01;
+      updateDDA(t);
+    }
+    var t1 = performance.now();
+    console.log("DDA: " + (t1-t0) + " milliseconds");
+
+    var t0 = performance.now();
+    var t = 0;
+    for(var i = 0; i < 1000; i++){
+      t += 0.01;
+      updateBresenham(t);
+    }
+    var t1 = performance.now();
+    console.log("Bresenham: " + (t1-t0) + " milliseconds");
+  } else {
+    window.requestAnimationFrame(updateCanvas);
+  }
+  </script>
+</div>
+</body>
+</html>
