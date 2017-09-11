@@ -7,7 +7,7 @@ class Ray {
   constructor(origin, direction) {
        private Vector origin;
        private Vector direction;
-    // TODO
+
   }
 
   /**
@@ -27,6 +27,6 @@ class Ray {
         this.ypos = ypos;
         this.camera = camera;
         return xpos + direction;
-    // TODO
+
   }
 }
