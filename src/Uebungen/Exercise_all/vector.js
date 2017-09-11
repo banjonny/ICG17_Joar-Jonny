@@ -7,13 +7,12 @@ class Vector {
    * @param  {number} w The w component
    * @return {number}   The resulting vector
    */
-   float x;
-   float y;
-   float z;
 
 
-  public vector (x, y, z, w) {
+  constructor (x, y, z, w) {
+
   this.data = [x,y,z,w];
+
   }
 
   /**
@@ -53,9 +52,9 @@ class Vector {
    * @param {(number|Vector)} other The scalar/vector to add
    */
   add(other, scalar) {
-    this.x = x * scalar + other.x;
-    this.y = y * scalar + other.y;
-    this.z = z * scalar + other.z;
+    this.data[0] = data[0] * scalar + other.x;
+    this.data[1] = data[1] * scalar + other.y;
+    this.data[2] = data[2] * scalar + other.z;
     return this;
   }
 
@@ -64,7 +63,7 @@ class Vector {
    * @param {(number|Vector)} other The scalar/vector to subtract
    */
   sub(other) {
-    return new vector(this.x - other.x, this.y - other.y, this.z - other.z);
+    return new Vector(this.data[0] - other.data[0], this.data[1] - other.data[1], this.data[2] - other.data[2], this.data[3] - other.data[3]);
   }
 
   /**
@@ -72,7 +71,7 @@ class Vector {
    * @param {(number|Vector)} other The scalar/vector to multiply
    */
   mul(other) {
-    return new vector(this.x * other, this.y * other, this.z * other);
+    return new Vector(this.data[0] * other, this.data[1] * other, this.data[2] * other, this.data[3] * other);
   }
 
   /**
@@ -80,8 +79,8 @@ class Vector {
    * @param {(number|Vector)} other The scalar/vector to divide
    */
   div(other) {
-    other = 1f/other;
-            return new vector(this.x * other, this.y * other, this.z * other);
+    other = 1/other;
+            return new Vector(this.data[0] * other, this.data[1] * other, this.data[2] * other, this.data[3] * other);
   }
 
   /**
@@ -89,7 +88,7 @@ class Vector {
    * @param {Vector} other The vector to calculate the dot product with
    */
   dot(other) {
-   return (this.x * other.x + this.y * other.y + this.z * other.z);
+   return (this.data[0] * other.data[0] + this.data[1] * other.data[1] + this.data[2] * other.data[2]);
   }
 
 
@@ -98,7 +97,8 @@ class Vector {
    * @param {Vector} other The vector to calculate the cross product with
    */
   cross(other) {
-    return cross(other, null);
+      Math.cross(other, other)
+
   }
 
   /**
@@ -106,13 +106,13 @@ class Vector {
    * @return {Array} An array representation.
    */
   valueOf() {
-    float[] floats;
-    if (floats == null) {
+    floats = [];
+    if (floats === null) {
                 floats = new float[3];
             }
-            floats[0] = this.x;
-            floats[1] = this.y;
-            floats[2] = this.z;
+            floats[0] = this.data[0];
+            floats[1] = this.data[1];
+            floats[2] = this.data[2];
             return floats;
   }
 
@@ -121,16 +121,16 @@ class Vector {
    * @return {Vector} A vector with length 1
    */
   normalised() {
-    float length = length();
+    var length = length();
     //        if (length != 0) {
     //            return divide(length);
     //        }
     //
     //        return divide(1);
-            float length = this.x * this.x + this.y * this.y + this.z * this.z;
-            if (length != 1f && length != 0f){
-                length = 1.0f / FastMath.sqrt(length);
-                return new vector(this.x * length,this.y * length, this.z * length);
+            var length = this.data[0] * this.data[0] + this.data[1] * this.data[1] + this.data[2] * this.data[2];
+            if (length != 1 && length != 0){
+                length = 1.0 / Math.sqrt(length);
+                return new Vector(this.data[0] * length,this.data[1] * length, this.data[2] * length, this.data[3] * length);
             }
             return clone();
   }
@@ -141,15 +141,12 @@ class Vector {
    * @return {Boolean}       True if the vectors carry equal numbers. The fourth element may be both equivalent to undefined to still return true.
    */
   equals(other) {
-    if (!(other instanceof vector)) { return false; }
-
-            if (this == other) { return true; }
-
-            vector comp = (vector) other;
-            if (Float.compare(this.x,comp.x) != 0) return false;
-            if (Float.compare(this.y,comp.y) != 0) return false;
-            if (Float.compare(this.z,comp.z) != 0) return false;
-            return true;
+    return (
+          Math.abs(this.data[0] - other.data[0]) <= Number.EPSILON &&
+          Math.abs(this.data[1] - other.data[1]) <= Number.EPSILON &&
+          Math.abs(this.data[2] - other.data[2]) <= Number.EPSILON &&
+          ((!this.data[3] && !other.data[3]) || Math.abs(this.data[3] - other.data[3]) <= Number.EPSILON)
+        );
   }
 
   /**
@@ -157,10 +154,10 @@ class Vector {
    * @return {number} Length of the vector
    */
   get length() {
-    return FastMath.sqrt(lengthSquared());
+    return Math.sqrt(lengthSquared());
   }
 
-  public float lengthSquared() {
-    return this.x * this.x + this.y * this.y + this.z * this.z;
+  public lengthSquared() {
+    return this.data[0] * this.data[0] + this.data[1] * this.data[1] + this.data[2] * this.data[2];
   }
 }

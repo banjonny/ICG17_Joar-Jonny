@@ -1,4 +1,5 @@
 class Intersection {
+
   constructor(t, point, normal) {
     if(t){
       this.t = t;
