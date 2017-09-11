@@ -5,8 +5,8 @@ class Ray {
    * @param  {Vector} direction The direction of the Ray
    */
   constructor(origin, direction) {
-       private Vector origin;
-       private Vector direction;
+       this.origin = origin;
+       this.direction = direction;
     // TODO
   }
 
@@ -21,12 +21,12 @@ class Ray {
    * @return {Ray}        The resulting Ray
    */
   static makeRay(width, height, xpos, ypos, camera) {
-        this.width = width;
-        this.height = height;
-        this.xpos = xpos;
-        this.ypos = ypos;
-        this.camera = camera;
-        return xpos + direction;
+         var pos = new Vector(xpos/width*2-1, ypos/height*2-1, -1, 1);
+            return new Ray(
+              camera,
+              pos.sub(camera).normalised()
+            );
+          }
     // TODO
   }
 }
