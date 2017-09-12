@@ -51,11 +51,8 @@ class Vector {
    * Creates a new vector with the scalar/vector added
    * @param {(number|Vector)} other The scalar/vector to add
    */
-  add(other, scalar) {
-    this.data[0] = data[0] * scalar + other.x;
-    this.data[1] = data[1] * scalar + other.y;
-    this.data[2] = data[2] * scalar + other.z;
-    return this;
+  add(other) {
+    return new Vector(this.data[0] + other.data[0], this.data[1] + other.data[1], this.data[2] + other.data[2], this.data[3])
   }
 
   /**
@@ -71,7 +68,7 @@ class Vector {
    * @param {(number|Vector)} other The scalar/vector to multiply
    */
   mul(other) {
-    return new Vector(this.data[0] * other, this.data[1] * other, this.data[2] * other, this.data[3] * other);
+    return new Vector(this.data[0] * other.data[0], this.data[1] * other.data[1], this.data[2] * other.data[2], this.data[3] * other.data[3]);
   }
 
   /**
@@ -97,7 +94,10 @@ class Vector {
    * @param {Vector} other The vector to calculate the cross product with
    */
   cross(other) {
-      Math.cross(other, other)
+      return new Vector (this.data[2] * other.data[1] - this.data[1] * other.data[2],
+                         this.data[0] * other.data[2] - this.data[2] * other.data[0],
+                         this.data[1] * other.data[0] - this.data[0] * other.data[1],
+                         this.data[3])
 
   }
 
@@ -108,7 +108,7 @@ class Vector {
   valueOf() {
     floats = [];
     if (floats === null) {
-                floats = new float[3];
+                var floats = new floats[3];
             }
             floats[0] = this.data[0];
             floats[1] = this.data[1];
@@ -121,18 +121,13 @@ class Vector {
    * @return {Vector} A vector with length 1
    */
   normalised() {
-    var length = length();
-    //        if (length != 0) {
-    //            return divide(length);
-    //        }
-    //
-    //        return divide(1);
-            var length = this.data[0] * this.data[0] + this.data[1] * this.data[1] + this.data[2] * this.data[2];
-            if (length != 1 && length != 0){
-                length = 1.0 / Math.sqrt(length);
-                return new Vector(this.data[0] * length,this.data[1] * length, this.data[2] * length, this.data[3] * length);
-            }
-            return clone();
+      var length = length();
+      this.data[0] = this.data[0] / length;
+      this.data[1] = this.data[1] / length;
+      this.data[2] = this.data[2] / length;
+      this.data[3] = this.data[3] / length;
+      return new Vector(this.data[0], this.data[1], this.data[2], this.data[3],)
+
   }
 
   /**
@@ -154,10 +149,7 @@ class Vector {
    * @return {number} Length of the vector
    */
   get length() {
-    return Math.sqrt(lengthSquared());
-  }
-
-  public lengthSquared() {
-    return this.data[0] * this.data[0] + this.data[1] * this.data[1] + this.data[2] * this.data[2];
+      var length = Math.sqrt((this.data[0] * this.data[0]) + (this.data[1] * this.data[1]) + (this.data[2] * this.data[2]))
+      return length;
   }
 }

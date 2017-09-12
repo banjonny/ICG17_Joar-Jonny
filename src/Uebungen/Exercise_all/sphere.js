@@ -4,10 +4,10 @@ class Sphere {
    * @param  {Vector} center The center of the Sphere
    * @param  {number} radius The radius of the Sphere
    */
-  constructor(center, radius, color) {
-    this.center = center;
+  constructor(center, radius) {
+    this.center = new Vector(center.x, center.y, center.z, center.w);
     this.radius = radius;
-    this.color = color;
+
   }
 
   /**
